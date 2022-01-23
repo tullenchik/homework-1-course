@@ -1,0 +1,251 @@
+#include <iostream>
+#include <stdlib.h>
+#include<string>
+#include<fstream>
+using namespace std;
+int main()
+{
+	srand(time(NULL));
+	setlocale(0, "");
+	string path = "work.dat.txt", path2 = "work.out.txt";
+	ofstream fout, posledneepokoleniu;
+	ifstream fin;
+	char msg[441], informacia[21][21], budushee[21][21], nastouacheebykvu[21][21], nastouashee[21][21], probel[21][21], mikrob;
+	char alphabet[26 + 1] = "abcdefghijklmnopqrstuvwxyz";
+	int pokoleniu, schetchik = 0, nachalnoeznch;
+	for (int i = 0; i < 21; i++)
+	{
+		for (int j = 0; j < 21; j++)
+		{
+			nastouacheebykvu[i][j] = '0';//
+			nastouashee[i][j] = '0';
+			probel[i][j] = ' ';
+		}
+	}
+	cout << "Введите сколько первых букв английского алфавита будет использовать программа: \n";
+	cin >> nachalnoeznch;
+	if (nachalnoeznch > 26 + 1)
+	{
+		cout << "В английском алфавите нет столько букв :(\nПопробуйте снова!";
+		return 0;
+	}
+	for (int i = 0; i < 21; i++)
+	{
+		for (int j = 0; j < 21; j++)
+		{
+
+			informacia[i][j] = alphabet[rand() % (nachalnoeznch)];
+		}
+	}
+	fout.open(path);
+	for (int i = 0; i < 21; i++)
+	{
+		for (int j = 0; j < 21; j++)
+		{
+			fout << informacia[i][j];
+			if (j == 20)
+			{
+				fout << "\n";
+			}
+		}
+	}
+	fout.close();	
+	fin.open(path);
+	while (!fin.eof())
+	{
+		for (int i = 0; i < 21 * 21; i++)
+		{
+			fin >> msg[i];
+		}
+	}
+	fin.close(); 
+	mikrob = alphabet[rand() % nachalnoeznch]; 
+	cout << "\nМикроб: " << mikrob << "\n";
+	for (int i = 0; i < 21; i++)
+	{
+		for (int j = 0; j < 21; j++)
+		{
+			nastouacheebykvu[i][j] = msg[i * 21 + j];
+			if (nastouacheebykvu[i][j] != mikrob)
+			{
+				nastouacheebykvu[i][j] = '0';
+				nastouashee[i][j] = '0';
+			}
+			else
+			{
+				nastouashee[i][j] = '1';
+			}
+		}
+	}
+	cout << "\nВходные данные:\n";
+	cout << "\n1.Массив с средой микробов\n";
+	for (int i = 0; i < 21; i++)
+	{
+		for (int j = 0; j < 21; j++)
+		{
+			cout << nastouacheebykvu[i][j];
+			cout << "  ";
+			if (j == 20)
+			{
+				cout << endl;
+			}
+		}
+	}
+	cout << "\n1.Массив с возрастом микробов\n";
+	for (int i = 0; i < 21; i++)
+	{
+		for (int j = 0; j < 21; j++)
+		{
+			cout << nastouashee[i][j];
+			cout << "  ";
+			if (j == 20)
+			{
+				cout << endl;
+			}
+		}
+	}
+	cout << "\nВведите число поколений: ";
+	cin >> pokoleniu;
+	posledneepokoleniu.open(path2);
+	while (schetchik != pokoleniu)
+	{
+		schetchik++;
+		for (int i = 0; i < 21; i++)
+		{
+			for (int j = 0; j < 21; j++)
+			{
+				int count = 0;
+				if ((i - 1 >= 0) and (i - 1 < 21))
+				{
+					if ((j >= 0) and (j < 21))
+					{
+						if (nastouashee[i - 1][j] != '0')
+						{
+							count++;
+						}
+					}
+					if ((j + 1 >= 0) and (j + 1 < 21))
+					{
+						if (nastouashee[i - 1][j + 1] != '0')
+						{
+							count++;
+						}
+					}
+					if ((j - 1 >= 0) and (j - 1 < 21))
+					{
+						if (nastouashee[i - 1][j - 1] != '0')
+						{
+							count++;
+						}
+					}
+				}
+				if ((i >= 0) and (i < 21))
+				{
+					if ((j + 1 >= 0) and (j + 1 < 21))
+					{
+						if (nastouashee[i][j + 1] != '0')
+						{
+							count++;
+						}
+					}
+					if ((j - 1 >= 0) and (j - 1 < 21))
+					{
+						if (nastouashee[i][j - 1] != '0')
+						{
+							count++;
+						}
+					}
+				}
+				if ((i + 1 >= 0) and (i + 1 < 21))
+				{
+					if ((j - 1 >= 0) and (j - 1 < 21))
+					{
+						if (nastouashee[i + 1][j - 1] != '0')
+						{
+							count++;
+						}
+					}
+					if ((j >= 0) and (j < 21))
+					{
+						if (nastouashee[i + 1][j] != '0')
+						{
+							count++;
+						}
+					}
+					if ((j + 1 >= 0) and (j + 1 < 21))
+					{
+						if (nastouashee[i + 1][j + 1] != '0')
+						{
+							count++;
+						}
+					}
+				}
+				if (nastouashee[i][j] == 60)
+				{
+					nastouashee[i][j] = '0';
+				}
+				if (nastouashee[i][j] == '0')
+				{
+					if (count == 3)
+					{
+						nastouashee[i][j] = nastouashee[i][j] + 1;
+					}
+				}
+				else
+				{
+					if ((count == 3) or (count == 2))
+					{
+						nastouashee[i][j] = nastouashee[i][j] + 1;
+					}
+				}
+				if (count < 2)
+				{
+					nastouashee[i][j] = '0';
+				}
+				if (count > 3)
+				{
+					nastouashee[i][j] = '0';
+				}
+			}
+		}
+		cout << schetchik << " поколение микробов: \n";
+		for (int b = 0; b < 21; b++)
+		{
+			for (int m = 0; m < 21; m++)
+			{
+				budushee[b][m] = nastouashee[b][m];
+				if (budushee[b][m] == 58)
+				{
+					budushee[b][m] = '1';
+					probel[b][m] = '0';
+				}
+				if (budushee[b][m] == 59)
+				{
+					budushee[b][m] = '1';
+					probel[b][m] = '1';
+				}
+				if (budushee[b][m] != '1')
+				{
+					probel[b][m] = ' ';
+				}
+				cout << budushee[b][m];
+				cout << probel[b][m];
+				cout << " ";
+				if (m == 20)
+				{
+					cout << "\n";
+				}
+				posledneepokoleniu << budushee[b][m] << probel[b][m] << " ";
+				if (m == 20)
+				{
+					posledneepokoleniu << "\n";
+				}
+
+			}
+		}
+	}
+	posledneepokoleniu << "\n";
+	cout << "\n";
+	posledneepokoleniu.close();
+	return 0;
+}  
