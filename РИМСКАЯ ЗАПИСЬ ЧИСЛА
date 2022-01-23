@@ -1,0 +1,50 @@
+//Декодировать римскую запись числа, состоящего из любого количества знаков.
+#include <iostream>//для консоли
+#include <Windows.h>//для русификации всего
+using namespace std;//пространство имен стд
+int main() 
+{
+	//русификация
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	//объявление переменных
+	string RomeAlphabet = "IVXLCDM", userRomeWord = "";
+	int res = 0;//результат (сумма из веденных пользователем чисел)
+	int numsMassive[7] = { 1, 5, 10, 50, 100, 500, 1000 };
+	//ввод римской цифры
+	cout << "Введите любое римское число: ";
+	cin >> userRomeWord;
+	for (int i = 0; i < userRomeWord.size() - 1; i++) //от первого элемента вводимых значений до последнего
+	{
+		bool proverka = false;
+		for (int j = 0; j < RomeAlphabet.size(); j++) //сравним каждый элемент пользовательского ввода с римским алфавитом (если они равны, то проверка будет правдой, иначе ложью,своеобразная проверка на дурака)
+		{
+			if (userRomeWord[i] == RomeAlphabet[j]) //рассмотрим случаи, когда слева стоит меньшая цифра, а справа большая, а значит, что они вычитаются
+			{
+				proverka = true;
+				res += numsMassive[j];
+				if (userRomeWord[i] == RomeAlphabet[0] and ((userRomeWord[i + 1] == RomeAlphabet[1]) or (userRomeWord[i + 1] == RomeAlphabet[2])))
+					res -= 2;
+				if (userRomeWord[i] == RomeAlphabet[2] and ((userRomeWord[i + 1] == RomeAlphabet[3]) or (userRomeWord[i + 1] == RomeAlphabet[4])))
+					res -= 20;
+				if (userRomeWord[i] == RomeAlphabet[4] and ((userRomeWord[i + 1] == RomeAlphabet[5]) or (userRomeWord[i + 1] == RomeAlphabet[6])))
+					res -= 200;
+				break;
+			}
+		}
+		if (proverka == false)//проверка на дурака
+		{
+			cout<< "Ошибка ввода";
+			return 0;
+		}
+	}
+	for (int l = 0; l < RomeAlphabet.size(); l++) //пройдемся по всему римскому алфавиту
+	{
+		if (userRomeWord[userRomeWord.size() - 1] == RomeAlphabet[l]) //если элемент пользовательского ввода равен римскому алфавиту, и он не остановился на проверке вычитания, следовательно прибавим этот элемент к результату
+		{
+			res += numsMassive[l];
+			cout<< " Данное римское число равняется "<< res << endl;
+			break;
+		}
+	}
+}
