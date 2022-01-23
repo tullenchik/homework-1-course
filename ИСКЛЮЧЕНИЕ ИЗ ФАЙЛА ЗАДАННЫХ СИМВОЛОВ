@@ -1,0 +1,34 @@
+//Исключение из текстового файла заданных символов
+#include <iostream>//для работы с консолью
+#include <fstream>//для работы с файлами
+#include <string>
+using namespace std;
+int main(void)
+{
+    //jjhuiskjmcnhsjuwikmaskxlkmdjeikdmfjifgolde
+    //объявление переменных
+    string nepravilno = "", informacia, zapis;//nepravilno-исключения, informacia-информация, которую записывает пользователь, zapis-запись из файла, после занесения туда данных
+    //русификация
+    setlocale(0, "");
+    //ввод и открытие файла для ввода
+    cout << "Введите данные: ";
+    getline(cin, informacia);
+    ofstream fout("myfile.txt");
+    fout << informacia;
+    fout.close();//закрытие файла для ввода
+    ifstream fin("myfile.txt");//открытие и создание файла для чтения
+    getline(fin, zapis);//запись из файла в переменную
+    fin.close();//закрытие файла для чтения
+    int sz = zapis.size();//количество знаков в файле
+    int sziskl = nepravilno.size();//количество знаком в исключении
+    cout << "Введите знаки, которые нужно удалить ";
+    cin >> nepravilno;
+    for (size_t k = zapis.find(nepravilno); k != zapis.npos; k = zapis.find(nepravilno, k))//процедура фильтра букв
+    {
+        zapis.erase(k, 1);
+    }
+    ofstream foutnew("myfile.txt");//ввод отфильтрованной информации
+    foutnew << zapis;
+    foutnew.close();//закрытие файла для ввода
+    return 0;
+}
