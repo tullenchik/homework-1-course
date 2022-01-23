@@ -1,0 +1,62 @@
+//алгоритм Евклида
+#include <iostream>//для работы с консолью
+using namespace std;//пространство имен стд
+#include <locale.h>//для русификации
+int deleniem(int a, int b)//функция для вычисления НОД делением
+{
+	while ((a > 0) && (b > 0))
+	{
+		if (a > b)
+		{
+			a %= b;
+		}
+		else
+		{
+			b %= a;
+		}
+	}
+	return a + b;
+}
+int vuchitaniem(int a, int b)//функция для вычисления НОД вычитанием
+{
+	while ((a > 0) && (b > 0))
+	{
+		if (a == b)
+		{
+			return a;
+		}
+		else
+		{
+			if (a > b)
+			{
+				a = a - b;
+			}
+			else
+			{
+				b = b - a;
+			}
+		}
+	}
+	return a;
+}
+int main()
+{
+	//объявление переменных
+	int a, b;//a-первое число,b-второе число
+	setlocale(0, "");//русификация
+	cout << "Введите первое целочисленное число: ";
+	cin >> a;
+	if (!cin)//защита от дурака
+	{
+		cout << "Ошибка ввода" << endl;
+	}
+	cout << "\nВведите второе целочисленное число: ";
+	cin >> b;
+	if (!cin)//защита от дурака
+	{
+		cout << "Ошибка ввода" << endl;
+	}
+	cout << "НОД делением: " << deleniem(a, b) << endl;//вывод НОД через деление и вычитание
+	cout << "Нод вычитанием: " << vuchitaniem(a, b) << endl;
+	return 0;
+}
