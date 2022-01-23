@@ -1,0 +1,111 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+    //объявление переменных
+    string informacia, alph = "0123456789ABCDEF";//informacia-информация,alph-символы, которые выводятся в консоль
+    int len, from, to, alph_key[16] = { 0, 1, 2, 3, 4, 5,6, 7, 8, 9,10, 11, 12, 13, 14, 15 }, dot_pos = 0, k = 0, int_decoded[256], fl_decoded[15];
+    int power = 0, c_part = 0;//len-количество символов в строке,from и to - системы счисления соответственно предущее и последующее
+    //alph_key-максимальная разрядность числа,k-место точки,int/fl_decoded-соответственные части числа, которые будут выводится в консоль
+    //с_part-округленное число, которое является дробной частью выводимого в консоль числа 
+    bool dot = false, minus = false;//
+    float ten_num = 0;
+
+    setlocale(0, "");//русификация
+    cout << "Введите число системы счисления от 2 до 16, первоначальную систему счисления и последующую систему счисления \n";
+    cin >> informacia;
+    if (!(cin >> from >> to) || getchar() != '\n') 
+    {
+        cout << "Error!";
+        exit(0);
+    }
+    len = informacia.size();//количество символов введенных данных
+    int* coded = new int[len];
+    for (int i = 0; i < len; i++)//цикл проходится по массиву введенных данных
+    {
+        if (informacia[i] == '-' && i == 0) //если первый символ это минус
+        {
+            minus = true;
+        }
+        else if (alph.find(informacia[i]) != string::npos) //иначе если в массиве веденных данных находится массив алфавита
+        {
+            if (alph.find(informacia[i]) >= from)//если количество совпадающих символов между введенным массивом и данными больше или равно с данными, то выведем ошибку
+            {
+                cout << "Ошибка ввода данных";
+                exit(0);
+            }
+            if (informacia[i] != '-' && informacia[i] != '.') //если символ не равен минусу или точке, то введи адресс в 16-ой СС
+            {
+                coded[i] = alph_key[alph.find(informacia[i])];
+            }
+        }
+        else if (informacia[i] == '.' && dot == false && i != 0)//если символ это точка, а индикатор очки отрицателен и номер символа не первый, то оозначим позицию точки и включим его индикатор
+        {
+            dot = true;
+            dot_pos = i;
+        }
+        else 
+        {
+            cout << "Error!";
+            exit(0);
+        }
+
+    }
+    if (dot_pos == 0)//если точка на первыом месте
+    {
+        dot_pos = len;//то длина слова=0
+    }
+    for (int i = minus; i < dot_pos; i++)//от места минуса до места точки
+    {
+        if (i != dot_pos)//если символ не равен точке,то:
+        {
+            ten_num += coded[i] * pow(from, dot_pos - i - 1);//начинается перевод: число умножается на число изначальной СС в соответсвующей степени 
+        }
+    }
+    for (int i = dot_pos + 1; i < len; i++)//от точки до конца слова
+    {
+        ten_num += coded[i] * pow(from, dot_pos - i);//начинается перевод: число умножается на число изначальной СС в соответсвующей степени 
+    }
+    int int_part = ten_num;//разделение числа на целое и дробное
+    float float_part = ten_num - int_part;
+    while (int_part > 0)//переводим отдельно целочисленную часть и дробную часть, пишем минус если число отрицательное
+    {
+
+        int_decoded[k] = int_part % to;
+        int_part /= to;
+        k++;
+    }
+    if (minus)
+    {
+        cout << "-";
+    }
+    for (int i = k - 1; i > -1; i--)//напиши число до точки
+    {
+        cout << alph[int_decoded[i]];
+    }
+
+    cout << ".";
+    while (true)
+    {
+        if (power > 14)
+        {
+            break;
+        }
+        float_part *= to;
+        c_part = floor(float_part);//округление до меньшего целого числа
+        fl_decoded[power] = c_part;//занесение в соответсвующий массив
+        if (float_part - c_part == 0)//если дошли до конца прерви цикл
+        {
+            break;
+        }
+        float_part -= c_part;//иначе вычти и пройди цикл заново
+        power++;
+    }
+    for (int i = 0; i <= power; i++)
+    {
+        cout << alph[fl_decoded[i]];//вывести дробную часть
+    }
+    return 0;
+}
