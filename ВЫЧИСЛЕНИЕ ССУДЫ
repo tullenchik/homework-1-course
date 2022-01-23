@@ -1,0 +1,40 @@
+#include <iostream>//библеотека для консоли
+#include <cmath>//библиотека для степени
+#include <math.h>
+using namespace std;
+
+int main()
+{
+	setlocale(LC_ALL, "russian");//русификация консоли
+	int S, m, n;
+	double p, r, m1;
+	m1 = 0;
+	cout << "Введите кол-во лет: ";//ввод перменных
+	cin >> n;
+	if (!cin) {//проверка на дурака
+		cout << "Ввод некоректен" << endl;
+		return 0;
+	}
+	cout << "Введите сумму ссуды: ";
+	cin>> S;
+	if (!cin) {//проверка на дурака
+		cout << "Ввод некоректен" << endl;
+		return 0;
+	}
+	cout<< "Введите размер месячной выплаты: ";
+	cin>> m;
+	if (!cin) {//проверка на дурака
+		cout << "Ввод некоректен" << endl;
+		return 0;
+	}
+	for (p = 0.001; m1 < m; p=p+0.001)
+	{
+		r = p / 100;//вычисление
+		m1 = (S * r * (pow((1+r),n)) )/( 12 * ( (pow((1+r),n)-1) ));
+		if (m1 > m) {
+			cout << "Кредит давался под " << p << "%" << endl;
+		}
+	}
+	system("pause");
+	return 0;
+}
