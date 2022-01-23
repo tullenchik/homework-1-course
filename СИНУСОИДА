@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+#define M_PI    3.14159265358979323846
+#define X1        -2*M_PI//границы графика
+#define X2        2*M_PI    
+// синусоида
+float func(float x) {
+    return sin(x);
+}
+int main() {
+    float epsilon = 0.05;//допустимая погрешность (шаг y/2)
+    float y = 1.1;//границы графика
+    float step = M_PI / 8.00;// шаг графика
+    while (y >= -1.1) //границы графика
+    {
+        for (float x = X1; x <= X2; x += step)//от -2пи до пи через шаг пи/32
+        {
+            if (abs(func(x) - y) >= epsilon)//если разница между функцией и шагом больше чем погрешность, то напечатай или ось x или оставь пустое множетсво
+            {
+                if (abs(y) < epsilon)
+                {
+                    cout << "-";// печать оси X
+                }
+                else
+                {
+                    cout << " ";
+                }
+            }
+            else //иначе построим график
+            {
+                cout << "*";
+            }
+            if (abs(x) < epsilon)
+            {
+                cout << "|";// печать оси Y
+            }
+        }
+        cout << endl;
+        y = y - 0.1;
+    }
+    return 0;
+}
