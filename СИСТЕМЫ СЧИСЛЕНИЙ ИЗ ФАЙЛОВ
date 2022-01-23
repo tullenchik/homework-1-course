@@ -1,0 +1,339 @@
+//Файлы. СОздать файл из N вещественных чисел в десятичной системе счисления. В другой файл записатть эти числа, переведенные из исходного файла в любую систему счисления по желанию пользователя в пределах от 2 до 9 СС
+#include <iostream>//библиотека для консоли
+#include <fstream>//библиотека для ofstream/ifstream
+using namespace std;//пространство имен стд
+#include <string>//библиотека для работы с строками
+#include <windows.h>//для вывода кириллициы
+#include <vector>//для векторов
+#include<algorithm>//для поворота векторов
+int main()
+{
+    setlocale(0, "");//для рисификации консоли, но в файл записывать можно только английские буквы
+    //объявление переменных
+    vector<string> chislo;
+    string informacia;
+    int n, count = 0, cc;
+    cout << "Введите строку вещественных десятичных чисел xtчерез пробел\n";
+    getline(cin, informacia);
+    for (int i = 0; i < informacia.length(); i++)//проверка на дурака
+    {
+        if (!((informacia[i] == '0') || (informacia[i] == '1') || (informacia[i] == '2') || (informacia[i] == '3') || (informacia[i] == '4') || (informacia[i] == '5') || (informacia[i] == '5') || (informacia[i] == '6') || (informacia[i] == '7') || (informacia[i] == '8') || (informacia[i] == '9') || (informacia[i] == ' ')))
+        {
+            cout<<"Ошибка ввода";
+            return 0;
+        }
+    }
+    ofstream fout("myfile.txt");
+    fout << informacia;
+    fout.close();//закрытие файла для ввода
+
+    ifstream fin("myfile.txt");//открытие и создание файла для чтения
+    while (fin >> n)
+    {
+        count++;//находим сколько слов в файле 
+    }
+    //чистим файл
+    fin.clear();
+    fin.seekg(0, ios::beg);
+    int* data = new int[count];//массив для информацией из файла
+    count = 0;
+    while (fin >> n)
+    {
+        data[count++] = n;//заносим все слова в динамический массив для информации из файла
+    }
+    fin.close();//закрытие файла для чтения
+    cout << "Введите систему счисления: ";
+    cin >> cc;
+    //ПЕРЕВОДЫ В СИТЕМЫ СЧИСЛЕНИЯ
+    //т.к числа в переводе из 10 в различные системы счисления добавляются задом наперед, делаем цикл for обратный для каждой системы счисления
+    if (cc == 2)//для двоичной
+    {
+        for (int i = count - 1; 0 <= i; i--)
+        {
+            do
+            {
+                if (data[i] % cc==1)//делаем "деление в столбик" в коде, и в соответсвии с остатком от деления добовляем в вектор число впереди. Далее для каждой СС аналогичный алгоритм
+                {
+                    chislo.push_back("1");
+                }
+                if (data[i] % cc==0)
+                {
+                    chislo.push_back("0");
+                }
+                data[i] = data[i] / 2;
+            } while (data[i]);
+            chislo.push_back(" ");
+        }
+    }
+    if (cc == 3)//ля троичной
+    {
+        for (int i = count - 1; 0 <= i; i--)
+        {
+            do
+            {
+                if (data[i] % cc==2)
+                {
+                    chislo.push_back("2");
+                }
+                if (data[i] % cc==1)
+                {
+                    chislo.push_back("1");
+                }
+                if (data[i] % cc == 0)
+                {
+                    chislo.push_back("0");
+                }
+                data[i] = data[i] / 3;
+            } while (data[i]);
+            chislo.push_back(" ");
+        }
+    }
+    if (cc == 4) //для четвиричной
+    {
+        for (int i = count - 1; 0 <= i; i--)
+        {
+            do
+            {
+                if (data[i] % cc == 3)
+                {
+                    chislo.push_back("3");
+                }
+                if (data[i] % cc == 2)
+                {
+                    chislo.push_back("2");
+                }
+                if (data[i] % cc == 1)
+                {
+                    chislo.push_back("1");
+                }
+                if (data[i] % cc == 0)
+                {
+                    chislo.push_back("0");
+                }
+                data[i] = data[i] / 4;
+            } while (data[i]);
+            chislo.push_back(" ");
+        }
+    }
+    if (cc == 5)//для пятеричной
+    {
+        for (int i = count - 1; 0 <= i; i--)
+        {
+            do
+            {
+                if (data[i] % cc == 4)
+                {
+                    chislo.push_back("4");
+                }
+                if (data[i] % cc == 3)
+                {
+                    chislo.push_back("3");
+                }
+                if (data[i] % cc == 2)
+                {
+                    chislo.push_back("2");
+                }
+                if (data[i] % cc == 1)
+                {
+                    chislo.push_back("1");
+                }
+                if (data[i] % cc == 0)
+                {
+                    chislo.push_back("0");
+                }
+                data[i] = data[i] / 5;
+            } while (data[i]);
+            chislo.push_back(" ");
+        }
+    }
+    if (cc == 6)//для шестиричной
+    {
+        for (int i = count - 1; 0 <= i; i--)
+        {
+            do
+            {
+                if (data[i] % cc == 5)
+                {
+                    chislo.push_back("5");
+                }
+                if (data[i] % cc == 4)
+                {
+                    chislo.push_back("4");
+                }
+                if (data[i] % cc == 3)
+                {
+                    chislo.push_back("3");
+                }
+                if (data[i] % cc == 2)
+                {
+                    chislo.push_back("2");
+                }
+                if (data[i] % cc == 1)
+                {
+                    chislo.push_back("1");
+                }
+                if (data[i] % cc == 0)
+                {
+                    chislo.push_back("0");
+                }
+                data[i] = data[i] / 6;
+            } while (data[i]);
+            chislo.push_back(" ");
+        }
+    }
+    if (cc == 7)//для семиричной
+    {
+        for (int i = count - 1; 0 <= i; i--)
+        {
+            do
+            {
+                if (data[i] % cc == 6)
+                {
+                    chislo.push_back("6");
+                }
+                if (data[i] % cc == 5)
+                {
+                    chislo.push_back("5");
+                }
+                if (data[i] % cc == 4)
+                {
+                    chislo.push_back("4");
+                }
+                if (data[i] % cc == 3)
+                {
+                    chislo.push_back("3");
+                }
+                if (data[i] % cc == 2)
+                {
+                    chislo.push_back("2");
+                }
+                if (data[i] % cc == 1)
+                {
+                    chislo.push_back("1");
+                }
+                if (data[i] % cc == 0)
+                {
+                    chislo.push_back("0");
+                }
+                data[i] = data[i] / 7;
+            } while (data[i]);
+            chislo.push_back(" ");
+        }
+    }
+    if (cc == 8)//для восьмиричной
+    {
+        for (int i = count - 1; 0 <= i; i--)
+        {
+            do
+            {
+                if (data[i] % cc == 7)
+                {
+                    chislo.push_back("7");
+                }
+                if (data[i] % cc == 6)
+                {
+                    chislo.push_back("6");
+                }
+                if (data[i] % cc == 5)
+                {
+                    chislo.push_back("5");
+                }
+                if (data[i] % cc == 4)
+                {
+                    chislo.push_back("4");
+                }
+                if (data[i] % cc == 3)
+                {
+                    chislo.push_back("3");
+                }
+                if (data[i] % cc == 2)
+                {
+                    chislo.push_back("2");
+                }
+                if (data[i] % cc == 1)
+                {
+                    chislo.push_back("1");
+                }
+                if (data[i] % cc == 0)
+                {
+                    chislo.push_back("0");
+                }
+                data[i] = data[i] / 8;
+            } while (data[i]);
+            chislo.push_back(" ");
+        }
+    }
+    if (cc == 9)//для девятиричной
+    {
+        for (int i = count - 1; 0 <= i; i--)
+        {
+            do
+            {
+                if (data[i] % cc == 8)
+                {
+                    chislo.push_back("8");
+                }
+                if (data[i] % cc == 7)
+                {
+                    chislo.push_back("7");
+                }
+                if (data[i] % cc == 6)
+                {
+                    chislo.push_back("6");
+                }
+                if (data[i] % cc == 5)
+                {
+                    chislo.push_back("5");
+                }
+                if (data[i] % cc == 4)
+                {
+                    chislo.push_back("4");
+                }
+                if (data[i] % cc == 3)
+                {
+                    chislo.push_back("3");
+                }
+                if (data[i] % cc == 2)
+                {
+                    chislo.push_back("2");
+                }
+                if (data[i] % cc == 1)
+                {
+                    chislo.push_back("1");
+                }
+                if (data[i] % cc == 0)
+                {
+                    chislo.push_back("0");
+                }
+                data[i] = data[i] / 9;
+            } while (data[i]);
+            chislo.push_back(" ");
+        }
+    }
+    int sz = chislo.size();
+    string* arr = new string[sz];//массив который будет изначально выводится
+    for (int i=0; i < sz; i=i+1)//переводим вектор в массив
+    {
+        int j = 0;
+        arr[j] = arr[j]+chislo[i];
+        if (chislo[i] == " ")
+        {
+            j++;
+        }
+    }
+    for (int i = 0; i < sz; i++)//меняем порядок членов в элементе массива
+    {
+        reverse(arr[i].begin(), arr[i].end());
+    }
+    cout << "Массив в " << cc << " системе счисления: \n";
+    for (int j = count-1; 0 <= j; j--)//выводим массив в консоль для проверки (в обратном порядке)
+    {
+        cout<< arr[j];
+    }
+    ofstream okon("1.txt");//окончательный файл
+    for (int i = 0; i < count; i++)
+    {
+        okon << arr[i];
+    }
+    return 0;
+}
