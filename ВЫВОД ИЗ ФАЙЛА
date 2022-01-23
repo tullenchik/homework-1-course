@@ -1,0 +1,99 @@
+//Вывести на экран только числа из созданного Вами на диске текстового файла, содержащего буквы и числа.
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+//Фильтр. Вывести на экран только числа из созданного Вами на диске текстового файла, содержащего буквы и числа
+//Данные, которые мы вводим 12 -23 3.4 -5.64 22qwerty 777 -67qe 7.7.6.4 6...8 —----8 9999
+int main()
+{
+    //объявление переменных
+    string pravilno = "1234567890.-",informacia,zapis;
+    char konechnaya_zapis[255];
+    int last_pos = 0;
+    bool dot=false,minus=false,uslovia=true;
+    //русификация
+    setlocale(0, "");
+    //ввод и открытие файла для ввода
+    cout << "Числа в строке. Введите строку\n";
+    getline(cin, informacia);
+    ofstream fout("myfile.txt");
+    fout << informacia;
+    fout.close();//закрытие файла для ввода
+    ifstream fin("myfile.txt");//открытие и создание файла для чтения
+    getline(fin, zapis);//запись из файла в переменную
+    fin.close();//закрытие файла для чтения
+    int sz = zapis.size();//количество знаков в файле
+    cout << "Числа:\n";
+    for (int i = 0; i < sz; i++)//пройдемся по всему файлу
+    {
+        if (zapis[i] == ' ' && uslovia)//если знак в файле это пробел и условия соблюдены
+        {
+            if (konechnaya_zapis[last_pos - 1] != '.')//если предыдущий знак отфильтрованного массива это не точка
+            {
+                for (int j = 0; j < last_pos; j++)//напиши все то, что написано до точки(включительно)
+                {
+                    cout << konechnaya_zapis[j];
+                }
+                cout << ' ';
+            }
+            //обнуляем значения до первоначальных
+            memset(konechnaya_zapis, 0, sizeof(konechnaya_zapis));
+            last_pos = 0;
+            dot = false;
+            uslovia = true;
+            continue;
+        }
+    if (zapis[i] == ' ' && !uslovia)
+    {
+        //обнуляем значения до первоначальных
+        uslovia = true;
+        last_pos = 0;
+        dot = false;
+        memset(konechnaya_zapis, 0, sizeof(konechnaya_zapis));
+        continue;
+    }
+    if (uslovia) 
+    {
+        if (pravilno.find(zapis[i]) == string::npos)//если элемент не совпадает с символом из массива правильных знаков, то условие не удовлетворено
+        {
+            uslovia = false;
+        }
+
+        if (zapis[i] == '-' && last_pos != 0)//если элемент это - и он не на первом место, то условие не удовлетворено
+        {
+            uslovia = false;
+        }
+
+        if (zapis[i] == '.' && (dot || last_pos == 0)) //если элемеет это точка и их больше чем 2 или она находится на первой позиции то условия также не удовлетворены
+        {
+            uslovia = false;
+        }
+        else if (zapis[i] == '.' && !dot)//если элемент это точка и она одна, то условия удовлетворены
+        {
+            dot = true;
+        }
+
+        if (uslovia)//если все условия соблюдены
+        {
+            konechnaya_zapis[last_pos] = zapis[i];//запиши в конечную информацию отфильтрованные значения, а указатель в конечных значениях перемещается на следующее место
+            last_pos += 1;
+        }
+        else//если условия не удовлетворены
+        {
+            //обнули значения до первоначальных
+            memset(konechnaya_zapis, 0, sizeof(konechnaya_zapis));
+            last_pos = 0;
+            dot = false;
+        }
+    }
+}
+    if (uslovia && konechnaya_zapis[last_pos - 1] != '.')//если условия удовлетворены и предыдущий элемент конечной запиши это не точка
+    {
+        for (int j = 0; j < last_pos; j++)//то напиши все значения до точки
+        {
+            cout << konechnaya_zapis[j];
+        }
+    }
+    return 0;
+}
